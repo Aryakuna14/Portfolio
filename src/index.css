@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Geist:wght@100..900&family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #8fa0b1;
+  --color-primary-container: #202b36;
+  --color-secondary: #7f91a5;
+  --color-tertiary: #5d6e7f;
+  --color-surface-container-lowest: #0c0e10;
+  --color-surface-container-low: #181a1c;
+  --color-surface-container: #1f2124;
+  --color-surface-container-high: #2a2c30;
+  --color-surface-container-highest: #35383d;
+  --color-on-surface: #f1f5f9;
+  --color-on-surface-variant: #cbd5e1;
+  --color-outline-variant: #475569;
+  --color-theme-background: #0c0e10;
+  --color-custom-error: #fca5a5;
+
+  --font-serif: "Bodoni Moda", serif;
+  --font-sans: "Hanken Grotesk", sans-serif;
+  --font-mono: "Geist", monospace;
+}
+
+@layer utilities {
+  .cyber-streak {
+    background: linear-gradient(90deg, transparent, rgba(143, 160, 177, 0.35), rgba(127, 145, 165, 0.7), transparent);
+    background-size: 200% 100%;
+    animation: streakMove 3s infinite linear;
+  }
+  
+  .glass-card {
+    background: rgba(31, 33, 36, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(143, 160, 177, 0.12);
+  }
+  
+  .glass-card:hover {
+    border-color: rgba(143, 160, 177, 0.35);
+    box-shadow: inset 0 0 20px rgba(143, 160, 177, 0.05);
+  }
+
+  .typing-effect::after {
+    content: '|';
+    animation: blink 1s step-end infinite;
+  }
+}
+
+@keyframes streakMove {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+body {
+  background-color: #0c0e10;
+  background-image: radial-gradient(circle at 15% 50%, rgba(175, 189, 202, 0.04) 0%, transparent 45%),
+                    radial-gradient(circle at 85% 30%, rgba(148, 163, 184, 0.03) 0%, transparent 45%);
+  background-attachment: fixed;
+  color: #f1f5f9;
+  font-family: "Hanken Grotesk", sans-serif;
+}
+
+/* Scrollbar tweaks */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0c0e10;
+}
+::-webkit-scrollbar-thumb {
+  background: #282a2c;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #40484b;
+}
