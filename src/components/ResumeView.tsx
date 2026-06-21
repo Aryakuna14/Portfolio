@@ -5,15 +5,13 @@ export default function ResumeView() {
   return (
     <div className="w-full max-w-4xl mx-auto px-4 md:px-0">
       <div className="text-center mb-10">
-        <span className="font-mono text-xs uppercase tracking-widest text-[#f8fafc] font-semibold border border-white/15 px-4 py-1.5 rounded-full bg-black/45 backdrop-blur-md shadow-md inline-block">
-          Curriculum Vitae
-        </span>
-        <h1 className="font-serif text-[42px] md:text-[54px] text-on-surface font-semibold mt-4 tracking-tight">
-          Professional Resume
-        </h1>
-        <p className="font-sans text-[15px] md:text-[17px] text-on-surface-variant max-w-xl mx-auto mt-2">
+        <p className="font-sans text-[15px] md:text-[17px] text-on-surface-variant max-w-xl mx-auto">
           Interactive digital ledger summarizing corporate internships, brand building, and embedded firmware experiments.
         </p>
+        <div className="mt-4 flex items-center justify-center gap-3">
+          <span className="font-serif text-[28px] md:text-[36px] font-semibold text-on-surface">Professional Resume</span>
+        </div>
+        <div className="section-divider mt-4" />
       </div>
 
       {/* Primary Actions Card */}
@@ -30,19 +28,19 @@ export default function ResumeView() {
 
         <div className="flex gap-3 w-full md:w-auto shrink-0 select-none">
           <a
-            href="https://aryakuna14.github.io/Resume.pdf"
+            href="https://aryakuna14.github.io/Resume.pdf#page=1"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-2 font-mono text-[11px] uppercase tracking-wider border border-primary/45 rounded-xl px-5 py-3.5 hover:bg-primary/5 hover:border-primary transition-all duration-300 text-on-surface font-semibold"
+            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-2 font-mono text-[11px] uppercase tracking-wider border border-outline-variant/25 rounded-xl px-5 py-3.5 hover:border-primary/40 hover:bg-primary/5 transition-all duration-300 text-on-surface font-semibold"
           >
             <ExternalLink className="h-4 w-4 text-primary" /> Preview Live
           </a>
           <a
-            href="https://aryakuna14.github.io/Resume.pdf"
+            href="https://aryakuna14.github.io/Resume.pdf#page=1"
             target="_blank"
             rel="noopener noreferrer"
             download="Arya_Sharan_Resume.pdf"
-            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-2 font-mono text-[11px] uppercase tracking-wider bg-primary border border-primary text-black rounded-xl px-6 py-3.5 hover:bg-primary/95 transition-all duration-300 font-bold shadow-lg"
+            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-2 font-mono text-[11px] uppercase tracking-wider bg-primary border border-primary text-[#0a0d10] rounded-xl px-6 py-3.5 hover:bg-primary/90 transition-all duration-300 font-bold shadow-lg"
           >
             <Download className="h-4 w-4" /> Download PDF
           </a>
@@ -56,14 +54,14 @@ export default function ResumeView() {
         {/* CV Header */}
         <div className="flex flex-col md:flex-row justify-between items-start border-b border-outline-variant/20 pb-8 gap-6">
           <div>
-            <h1 className="font-serif text-[38px] md:text-[46px] text-primary font-bold tracking-tight leading-none">
+            <h1 className="font-serif text-[36px] md:text-[44px] text-primary italic font-normal tracking-tight leading-none">
               Arya Sharan
             </h1>
             <p className="font-mono text-xs uppercase tracking-widest text-on-surface-variant mt-2.5 font-medium">
-              Electrical Engineering & Embedded Systems Specialist
+              Student
             </p>
             <p className="font-sans text-[14px] text-on-surface-variant mt-3 max-w-xl leading-relaxed">
-              Undergraduate EEE student specializing in battery test engineering, embedded firmware modeling, data structures, and supply-chain operations. Passionate about bridging structural hardware with clean software.
+              4th-Semester Electrical and Electronics Engineering (EEE) student passionate about Semiconductors, VLSI, Machine Learning and Embedded Systems.
             </p>
           </div>
 
@@ -91,13 +89,13 @@ export default function ResumeView() {
             
             {/* Experience Section */}
             <div>
-              <h2 className="font-serif text-[20px] md:text-[22px] text-primary font-semibold flex items-center gap-2.5 border-b border-outline-variant/20 pb-2 mb-6">
+              <h2 className="font-serif text-[19px] md:text-[21px] text-primary font-semibold flex items-center gap-2.5 border-b border-outline-variant/20 pb-2 mb-6">
                 <Briefcase className="h-5 w-5" /> Professional History
               </h2>
 
               <div className="space-y-8">
                 {experiences.map((exp, idx) => (
-                  <div key={exp.id || idx} className="relative pl-6 border-l-2 border-primary/20">
+                  <div key={exp.id || idx} className="relative pl-6 border-l-2 border-primary/15">
                     <div className="absolute w-3 h-3 bg-primary rounded-full -left-[7px] top-1.5" />
                     <div className="flex justify-between items-start flex-wrap gap-1">
                       <div>
@@ -108,7 +106,7 @@ export default function ResumeView() {
                           {exp.company} • <span className="text-on-surface-variant/80 text-[13px]">{exp.location}</span>
                         </p>
                       </div>
-                      <span className="font-mono text-[11px] text-on-surface-variant bg-[#111315] px-2 py-0.5 rounded border border-outline-variant/20 mb-2 md:mb-0">
+                      <span className="font-mono text-[11px] text-on-surface-variant bg-surface-container/50 px-2 py-0.5 rounded border border-outline-variant/12 mb-2 md:mb-0">
                         {exp.period}
                       </span>
                     </div>
@@ -124,7 +122,7 @@ export default function ResumeView() {
 
             {/* Education Section */}
             <div>
-              <h2 className="font-serif text-[20px] md:text-[22px] text-primary font-semibold flex items-center gap-2.5 border-b border-outline-variant/20 pb-2 mb-6">
+              <h2 className="font-serif text-[19px] md:text-[21px] text-primary font-semibold flex items-center gap-2.5 border-b border-outline-variant/20 pb-2 mb-6">
                 <GraduationCap className="h-5 w-5" /> Education Foundation
               </h2>
 
@@ -146,7 +144,7 @@ export default function ResumeView() {
                     </p>
                     <div className="flex flex-wrap gap-1 mt-2">
                       {edu.focus.map((item, fIdx) => (
-                        <span key={fIdx} className="text-[10px] font-mono border border-outline-variant/30 px-1.5 py-0.5 rounded text-on-surface-variant bg-surface-container-low">
+                        <span key={fIdx} className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">
                           {item}
                         </span>
                       ))}
@@ -166,44 +164,48 @@ export default function ResumeView() {
           <div className="md:col-span-4 flex flex-col gap-10">
             
             {/* Hard Core Technical Skills */}
-            <div className="bg-[#0c0e10]/60 border border-outline-variant/15 rounded-2xl p-5">
+            <div className="bg-surface-container/50 border border-outline-variant/12 rounded-2xl p-5">
               <h2 className="font-serif text-[16px] text-primary font-bold uppercase tracking-wider border-b border-outline-variant/10 pb-2 mb-4">
                 Technical Index
               </h2>
               
               <div className="space-y-3.5">
                 <div>
-                  <span className="font-mono text-[10px] text-on-surface-variant block uppercase mb-1">Embedded Code</span>
+                  <span className="font-mono text-[10px] text-on-surface-variant block uppercase mb-1">Hardware & Core Engineering</span>
                   <div className="flex flex-wrap gap-1">
-                    <span className="text-[10.5px] font-mono bg-surface-container/50 border border-outline-variant/15 px-2 py-0.5 rounded text-on-surface-variant">C / C++</span>
-                    <span className="text-[10.5px] font-mono bg-surface-container/50 border border-outline-variant/15 px-2 py-0.5 rounded text-on-surface-variant">Embedded C</span>
-                    <span className="text-[10.5px] font-mono bg-surface-container/50 border border-outline-variant/15 px-2 py-0.5 rounded text-on-surface-variant">Data Structures</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">Arduino</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">EV Technology</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">Solar PV</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">PCB Design</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">Raspberry Pi</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">ESP-32</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">STM-32</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">Sensors</span>
                   </div>
                 </div>
 
                 <div>
-                  <span className="font-mono text-[10px] text-on-surface-variant block uppercase mb-1">Hardware / Circuits</span>
+                  <span className="font-mono text-[10px] text-on-surface-variant block uppercase mb-1">Programming & Software</span>
                   <div className="flex flex-wrap gap-1">
-                    <span className="text-[10.5px] font-mono bg-surface-container/50 border border-outline-variant/15 px-2 py-0.5 rounded text-on-surface-variant">Arduino</span>
-                    <span className="text-[10.5px] font-mono bg-surface-container/50 border border-outline-variant/15 px-2 py-0.5 rounded text-on-surface-variant">Semiconductors</span>
-                    <span className="text-[10.5px] font-mono bg-surface-container/50 border border-outline-variant/15 px-2 py-0.5 rounded text-on-surface-variant">Analog Circuits</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">C / C++</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">Python</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">Data Structures</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">MATLAB</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">ML / SVM / CNN</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">OpenCV</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">LSTM</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">MediaPipe</span>
                   </div>
                 </div>
 
                 <div>
-                  <span className="font-mono text-[10px] text-on-surface-variant block uppercase mb-1">Power Systems</span>
+                  <span className="font-mono text-[10px] text-on-surface-variant block uppercase mb-1">Business & Interpersonal</span>
                   <div className="flex flex-wrap gap-1">
-                    <span className="text-[10.5px] font-mono bg-surface-container/50 border border-outline-variant/15 px-2 py-0.5 rounded text-on-surface-variant">Lithium Cell Balancing</span>
-                    <span className="text-[10.5px] font-mono bg-surface-container/50 border border-outline-variant/15 px-2 py-0.5 rounded text-on-surface-variant">Solar PV Integration</span>
-                  </div>
-                </div>
-
-                <div>
-                  <span className="font-mono text-[10px] text-on-surface-variant block uppercase mb-1">Growth & E-Commerce</span>
-                  <div className="flex flex-wrap gap-1">
-                    <span className="text-[10.5px] font-mono bg-surface-container/50 border border-outline-variant/15 px-2 py-0.5 rounded text-on-surface-variant">Shopify Mechanics</span>
-                    <span className="text-[10.5px] font-mono bg-surface-container/50 border border-outline-variant/15 px-2 py-0.5 rounded text-on-surface-variant">Meta Ads Manager</span>
-                    <span className="text-[10.5px] font-mono bg-surface-container/50 border border-outline-variant/15 px-2 py-0.5 rounded text-on-surface-variant">CPM Strategy</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">Hosting & Anchoring</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">Networking</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">Digital Marketing</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">E-commerce & SEO</span>
+                    <span className="text-[10px] font-mono bg-surface-container/40 border border-outline-variant/12 px-2 py-0.5 rounded-md text-on-surface-variant/80">Sponsorship Negotiation</span>
                   </div>
                 </div>
               </div>
@@ -211,13 +213,13 @@ export default function ResumeView() {
 
             {/* Leadership & Co-Curricular Section */}
             <div>
-              <h2 className="font-serif text-[18px] text-primary font-semibold flex items-center gap-2 border-b border-outline-variant/20 pb-2 mb-4">
+              <h2 className="font-serif text-[19px] md:text-[21px] text-primary font-semibold flex items-center gap-2 border-b border-outline-variant/20 pb-2 mb-4">
                 <Award className="h-4.5 w-4.5" /> Key Initiatives & Logistics
               </h2>
 
               <ul className="space-y-4 font-sans text-[13px] text-on-surface-variant leading-relaxed">
                 {projects.filter(p => p.category === 'non-technical').map((proj, idx) => (
-                  <li key={proj.id || idx} className="relative pl-4 border-l-2 border-primary/20">
+                  <li key={proj.id || idx} className="relative pl-4 border-l-2 border-primary/15">
                     <span className="font-serif font-semibold text-on-surface block leading-tight">{proj.title}</span>
                     <span className="text-[12px] text-on-surface-variant leading-normal block mt-1">{proj.description}</span>
                   </li>

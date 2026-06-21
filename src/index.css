@@ -1,20 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Geist:wght@100..900&family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
 
+/* Smooth scrolling + proximity snap on the page-level scroller */
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+}
+
 @theme {
-  --color-primary: #8fa0b1;
-  --color-primary-container: #202b36;
-  --color-secondary: #7f91a5;
-  --color-tertiary: #5d6e7f;
-  --color-surface-container-lowest: #0c0e10;
-  --color-surface-container-low: #181a1c;
-  --color-surface-container: #1f2124;
-  --color-surface-container-high: #2a2c30;
-  --color-surface-container-highest: #35383d;
-  --color-on-surface: #f1f5f9;
-  --color-on-surface-variant: #cbd5e1;
-  --color-outline-variant: #475569;
-  --color-theme-background: #0c0e10;
+  --color-primary: #7ec8c8;
+  --color-primary-container: #1a2e2e;
+  --color-secondary: #94b8b8;
+  --color-tertiary: #5d8a8a;
+  --color-accent: #c9a96e;
+  --color-surface-container-lowest: #0a0d10;
+  --color-surface-container-low: #111417;
+  --color-surface-container: #181b1f;
+  --color-surface-container-high: #1f2226;
+  --color-surface-container-highest: #282c31;
+  --color-on-surface: #eef2f6;
+  --color-on-surface-variant: #9ba8b4;
+  --color-outline-variant: #3d4a56;
+  --color-theme-background: #0a0d10;
   --color-custom-error: #fca5a5;
 
   --font-serif: "Bodoni Moda", serif;
@@ -24,26 +31,95 @@
 
 @layer utilities {
   .cyber-streak {
-    background: linear-gradient(90deg, transparent, rgba(143, 160, 177, 0.35), rgba(127, 145, 165, 0.7), transparent);
+    background: linear-gradient(90deg, transparent, rgba(126, 200, 200, 0.3), rgba(126, 200, 200, 0.6), transparent);
     background-size: 200% 100%;
     animation: streakMove 3s infinite linear;
   }
   
   .glass-card {
-    background: rgba(31, 33, 36, 0.4);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(143, 160, 177, 0.12);
+    background: rgba(17, 20, 23, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(126, 200, 200, 0.07);
+    transition: border-color 0.3s, box-shadow 0.3s;
   }
   
   .glass-card:hover {
-    border-color: rgba(143, 160, 177, 0.35);
-    box-shadow: inset 0 0 20px rgba(143, 160, 177, 0.05);
+    border-color: rgba(126, 200, 200, 0.18);
+    box-shadow: 0 0 40px rgba(126, 200, 200, 0.05), 0 8px 32px rgba(0,0,0,0.4);
   }
 
   .typing-effect::after {
     content: '|';
     animation: blink 1s step-end infinite;
+  }
+
+  /* Elegant section divider — thin gradient fade line */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(126, 200, 200, 0.25), transparent);
+  }
+
+  /* Section number accent — italic serif with rule */
+  .section-number {
+    font-family: "Bodoni Moda", serif;
+    font-style: italic;
+    color: #7ec8c8;
+    font-weight: 400;
+  }
+
+  /* Subtle glow for interactive elements */
+  .glow-hover:hover {
+    box-shadow: 0 0 20px rgba(126, 200, 200, 0.08), inset 0 0 20px rgba(126, 200, 200, 0.03);
+  }
+
+  /* Shimmer text effect */
+  .shimmer-text {
+    background: linear-gradient(90deg, #7ec8c8 0%, #eef2f6 40%, #7ec8c8 60%, #94b8b8 100%);
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 4s linear infinite;
+  }
+
+  /* Scanline overlay for CRT effect */
+  .scanlines::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* 3D card wrapper needs perspective */
+  .perspective-card {
+    perspective: 800px;
+  }
+
+  /* ── Scroll-snap layout ── */
+  .scroll-snap-y-proximity {
+    scroll-snap-type: y proximity;
+  }
+
+  .scroll-snap-start {
+    scroll-snap-align: start;
+    /* Offset snap point below the fixed header */
+    scroll-margin-top: 80px;
+  }
+
+  /* Section separator: thin glowing line between scroll pages */
+  .section-sep {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(126,200,200,0.12) 30%, rgba(126,200,200,0.22) 50%, rgba(126,200,200,0.12) 70%, transparent 100%);
+    margin: 0;
   }
 }
 
@@ -57,26 +133,140 @@
   50% { opacity: 0; }
 }
 
-body {
-  background-color: #0c0e10;
-  background-image: radial-gradient(circle at 15% 50%, rgba(175, 189, 202, 0.04) 0%, transparent 45%),
-                    radial-gradient(circle at 85% 30%, rgba(148, 163, 184, 0.03) 0%, transparent 45%);
-  background-attachment: fixed;
-  color: #f1f5f9;
-  font-family: "Hanken Grotesk", sans-serif;
+@keyframes glitchShift {
+  0%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0, 0); }
+  20% { clip-path: inset(20% 0 60% 0); transform: translate(-3px, 0); }
+  40% { clip-path: inset(50% 0 30% 0); transform: translate(3px, 0); }
+  60% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 0); }
+  80% { clip-path: inset(10% 0 80% 0); transform: translate(2px, 0); }
 }
 
-/* Scrollbar tweaks */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Circuit schematic scroll animation effects */
+@keyframes circuitNodePulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.8); }
+}
+
+@keyframes circuitLedGlow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.3); }
+}
+
+.circuit-node-pulse {
+  animation: circuitNodePulse 2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+.circuit-led-active {
+  animation: circuitLedGlow 1.5s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+/* Global Selection */
+::selection {
+  background: rgba(126, 200, 200, 0.25);
+  color: #eef2f6;
+}
+
+/* Hide native cursor on pointer devices — custom CyberCursor takes over */
+@media (hover: hover) and (pointer: fine) {
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+}
+
+body {
+  background-color: #0a0d10;
+  background-image: radial-gradient(circle at 15% 50%, rgba(126, 200, 200, 0.03) 0%, transparent 45%),
+                    radial-gradient(circle at 85% 30%, rgba(126, 200, 200, 0.02) 0%, transparent 45%);
+  color: #eef2f6;
+  font-family: "Hanken Grotesk", sans-serif;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Refined Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0c0e10;
+  background: #0a0d10;
 }
 ::-webkit-scrollbar-thumb {
-  background: #282a2c;
-  border-radius: 4px;
+  background: #1f2226;
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #40484b;
+  background: #3d4a56;
+}
+
+/* Form element refinements */
+input::placeholder,
+textarea::placeholder {
+  color: rgba(155, 168, 180, 0.4);
+}
+
+input:focus,
+textarea:focus {
+  border-color: #7ec8c8 !important;
+  box-shadow: 0 0 0 1px rgba(126, 200, 200, 0.15);
+}
+
+/* Range slider refinement */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(126, 200, 200, 0.1);
+  border-radius: 4px;
+  height: 4px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #7ec8c8;
+  cursor: pointer;
+  border: 2px solid #0a0d10;
+  box-shadow: 0 0 6px rgba(126, 200, 200, 0.3);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #7ec8c8;
+  cursor: pointer;
+  border: 2px solid #0a0d10;
+  box-shadow: 0 0 6px rgba(126, 200, 200, 0.3);
+}
+
+/* Hide scrollbar for mobile nav */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }

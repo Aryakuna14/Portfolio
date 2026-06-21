@@ -93,6 +93,16 @@ export const educationList: EducationItem[] = [
 
 export const projects: ProjectItem[] = [
   {
+    id: 'court-recon',
+    title: 'COURT_RECON: Full-Stack Sports Analytics',
+    description: 'Data science dashboard for live basketball event logging, player statistics, and SVM-based matchup prediction.',
+    tech: ['Python', 'FastAPI', 'SQLAlchemy', 'React', 'SVM'],
+    category: 'technical',
+    longDescription: 'COURT_RECON is a full-stack data science dashboard for local basketball clubs. It lets users add players, log live game events such as points, assists, rebounds, steals, blocks, turnovers, and fouls, then converts those raw events into player statistics, leaderboards, trend charts, and radar-based performance comparisons. The backend is built with Python, FastAPI, SQLAlchemy, and SQLite. It provides REST APIs for player management, event logging, statistics aggregation, team scoring trends, and matchup prediction. The frontend is built with React, Vite, Axios, and Recharts, giving the project an interactive dashboard experience. The machine learning part uses a Support Vector Machine classifier trained on a synthetic 1v1 basketball matchup dataset. The model compares two players using stat-difference features like points, assists, rebounds, steals, blocks, turnovers, and fouls, then predicts each player’s win probability. This project demonstrates practical skills in full-stack development, database design, data processing, sports analytics, and ML model integration.',
+    simulatable: false,
+    link: 'https://www.linkedin.com/feed/update/urn:li:activity:7465614181078052865/'
+  },
+  {
     id: 'posture-bot',
     title: 'CV Posture Analysis Bot',
     description: 'AI-based health assistant monitoring user posture using Computer Vision and MediaPipe.',
@@ -175,14 +185,13 @@ export const projects: ProjectItem[] = [
     simulatable: false
   },
   {
-    id: 'linkedin-activity-7458745039922499584',
-    title: 'Featured Professional Highlight',
-    description: 'Overview of student community leadership, event operations, and strategic marketing milestones.',
-    tech: ['Community Leadership', 'Event Operations', 'PR & Branding', 'Corporate Outreach'],
+    id: 'motorsports-intern',
+    title: 'Motorsports Intern',
+    description: 'Handling Instagram reach, brand sponsorship & collaborations, and online marketing for a motorsports team.',
+    tech: ['Instagram Marketing', 'Brand Sponsorship', 'Collaborations', 'Online Marketing'],
     category: 'non-technical',
-    longDescription: 'A custom professional update reflecting on managing on-ground logistics, celebrity coordination, and media reach for mass campus gatherings. Bridges tactical engineering education with fast-paced organizational strategy.',
-    simulatable: false,
-    link: 'https://www.linkedin.com/feed/update/urn:li:activity:7458745039922499584/'
+    longDescription: 'Working as a Motorsports Intern, responsible for driving Instagram reach and audience engagement, securing brand sponsorships and strategic collaborations, and executing online marketing campaigns to amplify the team\'s digital presence and grow its fan base across social media platforms.',
+    simulatable: false
   }
 ];
 
@@ -196,7 +205,10 @@ export const skillCategories: SkillCategory[] = [
       { name: 'Biomass', proficiency: 75 },
       { name: 'PCB Design', proficiency: 82 },
       { name: 'Raspberry Pi', proficiency: 88 },
-      { name: 'Pico', proficiency: 86 }
+      { name: 'Pico', proficiency: 86 },
+      { name: 'ESP-32', proficiency: 88 },
+      { name: 'STM-32', proficiency: 80 },
+      { name: 'Various Sensors', proficiency: 85 }
     ]
   },
   {
@@ -206,6 +218,12 @@ export const skillCategories: SkillCategory[] = [
       { name: 'Python', proficiency: 85 },
       { name: 'Data Structures (C++)', proficiency: 82 },
       { name: 'MATLAB', proficiency: 75 },
+      { name: 'Machine Learning', proficiency: 80 },
+      { name: 'SVM', proficiency: 78 },
+      { name: 'CNN', proficiency: 78 },
+      { name: 'OpenCV', proficiency: 82 },
+      { name: 'LSTM', proficiency: 75 },
+      { name: 'MediaPipe', proficiency: 80 },
       { name: 'AutoCAD', proficiency: 78 },
       { name: 'Deeds', proficiency: 80 },
       { name: 'Thonny', proficiency: 80 }
@@ -214,13 +232,15 @@ export const skillCategories: SkillCategory[] = [
   {
     title: 'Business & Interpersonal',
     skills: [
+      { name: 'Hosting & Anchoring', proficiency: 90 },
+      { name: 'Networking', proficiency: 88 },
       { name: 'Digital Marketing', proficiency: 90 },
       { name: 'Brand Strategy', proficiency: 88 },
       { name: 'Event Logistics', proficiency: 92 },
       { name: 'E-commerce', proficiency: 85 },
       { name: 'SEO', proficiency: 82 },
-      { name: 'Sponsorship negotiation', proficiency: 87 },
-      { name: 'Celebrity management', proficiency: 88 },
+      { name: 'Sponsorship Negotiation', proficiency: 87 },
+      { name: 'Celebrity Management', proficiency: 88 },
       { name: 'Fluent in English & Hindi', proficiency: 95 },
       { name: 'Basic Kannada', proficiency: 70 }
     ]
@@ -230,7 +250,7 @@ export const skillCategories: SkillCategory[] = [
 export const roleTitles: string[] = [
   'Embedded Systems & Hardware Designer',
   'Electrical & Electronics Eng. Student @ DSCE',
-  'VLSI & AI-ML Enthusiast',
+  'VLSI & AI-ML Specialist',
   'Event Operations Specialist'
 ];
 

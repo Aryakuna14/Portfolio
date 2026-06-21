@@ -3,7 +3,9 @@ import { motion } from 'motion/react';
 
 export default function DynamicBackground() {
   const stars = useMemo(() => {
-    return Array.from({ length: 180 }).map((_, i) => ({
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const count = isMobile ? 35 : 100;
+    return Array.from({ length: count }).map((_, i) => ({
       id: i,
       top: `${Math.random() * 100}%`,
       left: `${Math.random() * 100}%`,
@@ -15,22 +17,22 @@ export default function DynamicBackground() {
   }, []);
 
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 bg-[#0a0f16]">
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 bg-[#0a0d10]">
       
       {/* Base Deep Space / Minimalist Background */}
       <div 
         className="absolute inset-0 w-full h-full"
         style={{
-          background: "radial-gradient(circle at 50% 0%, #151d29 0%, #0a0f16 70%, #05080c 100%)",
+          background: "radial-gradient(circle at 50% 0%, #0f1518 0%, #0a0d10 70%, #060809 100%)",
         }}
       />
 
       {/* Rolls Royce Starlight Headliner Effect */}
-      <div className="absolute inset-0 w-full h-full opacity-80">
+      <div className="absolute inset-0 w-full h-full opacity-60">
         {stars.map((star) => (
           <motion.div
             key={star.id}
-            className="absolute rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,0.6)]"
+            className="absolute rounded-full bg-white shadow-[0_0_6px_rgba(126,200,200,0.4)]"
             style={{
               top: star.top,
               left: star.left,
@@ -62,7 +64,7 @@ export default function DynamicBackground() {
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="absolute top-[-15%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-blue-500/[0.03] blur-[120px]"
+        className="absolute top-[-15%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-teal-500/[0.025] blur-[120px]"
       />
 
       {/* Subtle minimalist orb 2 - Bottom Right */}
@@ -76,7 +78,7 @@ export default function DynamicBackground() {
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[40vw] rounded-full bg-purple-500/[0.025] blur-[140px]"
+        className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[40vw] rounded-full bg-cyan-600/[0.02] blur-[140px]"
       />
 
       {/* Very faint ambient light through the center */}
@@ -90,7 +92,7 @@ export default function DynamicBackground() {
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[25vw] bg-teal-500/[0.015] blur-[120px] rounded-full rotate-[-15deg] mix-blend-screen"
+        className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[25vw] bg-[#7ec8c8]/[0.012] blur-[120px] rounded-full rotate-[-15deg] mix-blend-screen"
       />
       
       {/* Noise overlay for seamless banding reduction */}

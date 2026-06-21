@@ -14,6 +14,8 @@ import {
   Flame,
   Music
 } from 'lucide-react';
+import InterestsPartyBackground from './InterestsPartyBackground';
+import { Reveal, RevealGroup, RevealChild } from './Reveal';
 
 interface InterestItem {
   id: string;
@@ -24,7 +26,7 @@ interface InterestItem {
   details?: string[];
 }
 
-export default function InterestsView() {
+export default function InterestsView({ onPartyTrigger }: { onPartyTrigger?: () => void }) {
   const [activeCategory, setActiveCategory] = useState<'all' | 'technical' | 'leadership' | 'personal'>('all');
   const [partyCounter, setPartyCounter] = useState<number>(0);
   const [partyActive, setPartyActive] = useState<boolean>(false);
@@ -115,6 +117,10 @@ export default function InterestsView() {
     setTimeout(() => {
       setPartyActive(false);
     }, 2000);
+
+    if (onPartyTrigger) {
+      onPartyTrigger();
+    }
   };
 
   const getFilteredItems = () => {
@@ -133,37 +139,41 @@ export default function InterestsView() {
   const filtered = getFilteredItems();
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 md:px-0">
+    <div className="w-full max-w-5xl mx-auto px-4 md:px-0 relative z-0">
       
-      {/* Title */}
-      <div className="text-center mb-12 relative z-10">
-        <span className="font-mono text-xs uppercase tracking-widest text-[#f8fafc] font-semibold border border-white/15 px-4 py-1.5 rounded-full bg-black/45 backdrop-blur-md shadow-md inline-block">
-          Interests & Hobbies
-        </span>
-        <h1 className="font-serif text-[42px] md:text-[54px] text-on-surface font-semibold mt-4 tracking-tight">
-          Lifestyle Pursuits
-        </h1>
-        <p className="font-sans text-[15px] md:text-[17px] text-on-surface-variant max-w-xl mx-auto mt-2">
-          From embedded system design and academic VLSI study to community leadership and active visual subcultures.
-        </p>
+      {/* Scroll-Triggered Party Celebration Background Animation */}
+      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none md:opacity-40 -mt-10">
+        <InterestsPartyBackground />
       </div>
 
+      {/* Title */}
+      <Reveal className="text-center mb-12 relative z-10">
+        <p className="font-sans text-[15px] md:text-[17px] text-on-surface-variant max-w-xl mx-auto">
+          From embedded system design and academic VLSI study to community leadership and active visual subcultures.
+        </p>
+        <div className="flex items-center justify-center gap-3">
+          <span className="section-number text-[28px] md:text-[36px]">06.</span>
+          <span className="font-serif text-[28px] md:text-[36px] text-on-surface font-semibold tracking-tight">Interests</span>
+        </div>
+        <div className="section-divider mt-4" />
+      </Reveal>
+
       {/* Category Tabs */}
-      <div className="flex flex-wrap items-center justify-center gap-2 mb-12 relative z-10">
+      <Reveal className="flex flex-wrap items-center justify-center gap-2 mb-12 relative z-10" delay={0.1}>
         {categories.map((cat) => (
           <button
             key={cat.id}
             onClick={() => setActiveCategory(cat.id as any)}
             className={`font-mono text-xs uppercase tracking-wider py-2.5 px-4 rounded-xl border transition-all duration-300 cursor-pointer ${
               activeCategory === cat.id
-                ? 'bg-[#1e2732] border-primary text-[#f8fafc] font-semibold shadow-md translate-y-[-1px]'
-                : 'bg-black/20 border-white/5 text-on-surface-variant hover:text-on-surface hover:bg-black/45'
+                ? 'bg-primary-container border-primary/30 text-on-surface font-semibold'
+                : 'bg-surface-container/40 border-outline-variant/15 text-on-surface-variant hover:text-on-surface hover:border-outline-variant/30'
             }`}
           >
             {cat.label}
           </button>
         ))}
-      </div>
+      </Reveal>
 
       {/* Grid Container */}
       <div className="space-y-12 relative z-10 text-left">
@@ -172,18 +182,15 @@ export default function InterestsView() {
         {filtered.technical.length > 0 && (
           <div>
             <div className="flex items-center gap-3 mb-6">
-              <span className="h-6 w-1 bg-blue-400 rounded-full" />
+              <span className="h-6 w-0.5 bg-blue-400 rounded-full" />
               <h2 className="font-serif text-[22px] font-bold text-on-surface">Technical Pursuits</h2>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {filtered.technical.map((item, idx) => (
-                <motion.div
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: idx * 0.05 }}
-                  key={item.id}
-                  className="glass-card rounded-2xl p-6 flex flex-col gap-5 border border-white/5 hover:border-primary/20 hover:bg-black/40 transition-all duration-300 group min-h-[220px]"
+            <RevealGroup className="grid grid-cols-1 md:grid-cols-3 gap-6" stagger={0.1} delay={0.05}>
+              {filtered.technical.map((item) => (
+                <RevealChild key={item.id}>
+                <div
+                  className="glass-card rounded-2xl p-6 flex flex-col gap-5 border border-outline-variant/10 hover:border-primary/20 transition-all duration-300 group min-h-[220px]"
                 >
                   <div className="flex items-center justify-between">
                     <div className="p-3 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/10">
@@ -192,7 +199,7 @@ export default function InterestsView() {
                   </div>
                   
                   <div>
-                    <h3 className="font-serif text-lg font-bold text-[#fafafa] tracking-tight group-hover:text-primary transition-colors">
+                    <h3 className="font-serif text-lg font-bold text-on-surface tracking-tight group-hover:text-primary transition-colors">
                       {item.title}
                     </h3>
                     <p className="font-sans text-[13.5px] text-on-surface-variant leading-relaxed mt-2.5">
@@ -203,15 +210,16 @@ export default function InterestsView() {
                   {item.details && (
                     <div className="flex flex-wrap gap-1.5 mt-auto pt-2">
                       {item.details.map((tag) => (
-                        <span key={tag} className="font-mono text-[9px] uppercase tracking-wider text-[#99cfe0] bg-black/35 px-2 py-0.5 rounded border border-white/5">
+                        <span key={tag} className="font-mono text-[8px] uppercase tracking-wider text-on-surface-variant/80 bg-surface-container/50 px-2 py-0.5 rounded-md border border-outline-variant/10">
                           {tag}
                         </span>
                       ))}
                     </div>
                   )}
-                </motion.div>
+                </div>
+                </RevealChild>
               ))}
-            </div>
+            </RevealGroup>
           </div>
         )}
 
@@ -219,7 +227,7 @@ export default function InterestsView() {
         {filtered.leadership.length > 0 && (
           <div>
             <div className="flex items-center gap-3 mb-6">
-              <span className="h-6 w-1 bg-rose-400 rounded-full" />
+              <span className="h-6 w-0.5 bg-rose-400 rounded-full" />
               <h2 className="font-serif text-[22px] font-bold text-on-surface">Leadership & Management</h2>
             </div>
 
@@ -230,7 +238,7 @@ export default function InterestsView() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: idx * 0.05 }}
                   key={item.id}
-                  className="glass-card rounded-2xl p-6 flex flex-col gap-5 border border-white/5 hover:border-primary/20 hover:bg-black/40 transition-all duration-300 group min-h-[190px]"
+                  className="glass-card rounded-2xl p-6 flex flex-col gap-5 border border-outline-variant/10 hover:border-primary/20 transition-all duration-300 group min-h-[190px]"
                 >
                   <div className="flex items-center justify-between">
                     <div className="p-3 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/10">
@@ -239,7 +247,7 @@ export default function InterestsView() {
                   </div>
 
                   <div>
-                    <h3 className="font-serif text-lg font-bold text-[#fafafa] tracking-tight group-hover:text-primary transition-colors">
+                    <h3 className="font-serif text-lg font-bold text-on-surface tracking-tight group-hover:text-primary transition-colors">
                       {item.title}
                     </h3>
                     <p className="font-sans text-[13.5px] text-on-surface-variant leading-relaxed mt-2.5">
@@ -250,7 +258,7 @@ export default function InterestsView() {
                   {item.details && (
                     <div className="flex flex-wrap gap-1.5 mt-auto pt-2">
                       {item.details.map((tag) => (
-                        <span key={tag} className="font-mono text-[9px] uppercase tracking-wider text-[#fda4af] bg-black/35 px-2 py-0.5 rounded border border-white/5">
+                        <span key={tag} className="font-mono text-[8px] uppercase tracking-wider text-on-surface-variant/80 bg-surface-container/50 px-2 py-0.5 rounded-md border border-outline-variant/10">
                           {tag}
                         </span>
                       ))}
@@ -266,7 +274,7 @@ export default function InterestsView() {
         {filtered.personal.length > 0 && (
           <div>
             <div className="flex items-center gap-3 mb-6">
-              <span className="h-6 w-1 bg-amber-400 rounded-full" />
+              <span className="h-6 w-0.5 bg-amber-400 rounded-full" />
               <h2 className="font-serif text-[22px] font-bold text-on-surface">Personal Interests & Hobbies</h2>
             </div>
 
@@ -282,8 +290,8 @@ export default function InterestsView() {
                     onClick={isPartying ? handlePartyTrigger : undefined}
                     className={`glass-card rounded-2xl p-6 flex flex-col gap-5 border duration-300 group min-h-[225px] transition-all ${
                       isPartying 
-                        ? 'border-amber-500/25 bg-black/35 hover:bg-black/50 hover:border-amber-400/60 cursor-pointer active:scale-[0.98]'
-                        : 'border-white/5 hover:border-primary/20 hover:bg-black/40'
+                        ? 'border-amber-500/15 hover:border-amber-500/30 cursor-pointer active:scale-[0.98]'
+                        : 'border-outline-variant/10 hover:border-primary/20'
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -304,7 +312,7 @@ export default function InterestsView() {
 
                     <div>
                       <h3 className={`font-serif text-lg font-bold tracking-tight transition-colors ${
-                        isPartying ? 'text-amber-300 group-hover:text-amber-200' : 'text-[#fafafa] group-hover:text-primary'
+                        isPartying ? 'text-amber-300 group-hover:text-amber-200' : 'text-on-surface group-hover:text-primary'
                       }`}>
                         {item.title}
                       </h3>
@@ -330,7 +338,7 @@ export default function InterestsView() {
                     {item.details && (
                       <div className="flex flex-wrap gap-1.5 mt-auto pt-2">
                         {item.details.map((tag) => (
-                          <span key={tag} className="font-mono text-[9px] uppercase tracking-wider text-[#fcd34d] bg-black/35 px-2 py-0.5 rounded border border-white/5">
+                          <span key={tag} className="font-mono text-[8px] uppercase tracking-wider text-on-surface-variant/80 bg-surface-container/50 px-2 py-0.5 rounded-md border border-outline-variant/10">
                             {tag}
                           </span>
                         ))}

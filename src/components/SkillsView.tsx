@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { Cpu, Zap, Radio, Globe, BarChart, Sliders, CheckCircle, RefreshCcw, ShieldAlert } from 'lucide-react';
+import { Cpu, RefreshCcw } from 'lucide-react';
 import { skillCategories } from '../data';
+import CircuitSchematic from './CircuitSchematic';
+import { Reveal, RevealGroup, RevealChild } from './Reveal';
 
 // Assembler game state structures
 interface AssemblerState {
@@ -65,42 +67,47 @@ export default function SkillsView() {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 md:px-0">
+    <div className="w-full max-w-5xl mx-auto px-4 md:px-0 relative z-0">
       
-      {/* Title */}
-      <div className="text-center mb-10">
-        <span className="font-mono text-xs uppercase tracking-widest text-[#f8fafc] font-semibold border border-white/15 px-4 py-1.5 rounded-full bg-black/45 backdrop-blur-md shadow-md inline-block">
-          Acquired Skillset
-        </span>
-        <h1 className="font-serif text-[42px] md:text-[54px] text-on-surface font-semibold mt-4 tracking-tight">
-          Capabilities & Tools
-        </h1>
-        <p className="font-sans text-[15px] md:text-[17px] text-on-surface-variant max-w-xl mx-auto mt-2">
+      {/* Scroll-Triggered Circuit Schematic Background Animation */}
+      <div className="absolute inset-0 z-0 opacity-40 pointer-events-none md:opacity-100">
+        <CircuitSchematic />
+      </div>
+      
+      {/* Section Header */}
+      <Reveal className="text-center mb-12 relative z-10">
+        <p className="font-sans text-[15px] md:text-[17px] text-on-surface-variant max-w-xl mx-auto mb-5 leading-relaxed">
           Divided across hardware layouts, data algorithms, and subculture e-commerce marketing strategy.
         </p>
-      </div>
+        <div className="flex items-center justify-center gap-3">
+          <span className="section-number text-[32px] md:text-[42px]">05.</span>
+          <span className="font-serif text-[32px] md:text-[42px] text-on-surface font-semibold tracking-tight">Skills</span>
+        </div>
+        <div className="section-divider mt-4" />
+      </Reveal>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16 relative z-10">
         
         {/* Left Side: Skills profile list (7 cols) */}
-        <div className="lg:col-span-7 flex flex-col gap-6">
+        <RevealGroup className="lg:col-span-7 flex flex-col gap-6" stagger={0.18} delay={0.05}>
           {skillCategories.map((category) => (
-            <div key={category.title} className="glass-card rounded-2xl p-6 md:p-8 text-left relative overflow-hidden">
+            <RevealChild key={category.title}>
+            <div className="glass-card rounded-2xl p-5 md:p-7 lg:p-9 text-left relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full" />
               
-              <h2 className="font-serif text-[20px] md:text-[23px] text-primary font-bold mb-4 tracking-tight border-b border-outline-variant/15 pb-2">
+              <h2 className="font-serif text-[19px] md:text-[21px] text-primary font-semibold mb-5 tracking-tight border-b border-outline-variant/15 pb-3">
                 {category.title}
               </h2>
 
               <div className="space-y-4">
                 {category.skills.map((skill) => (
-                  <div key={skill.name} className="flex flex-col gap-1">
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="font-sans font-medium text-on-surface">{skill.name}</span>
-                      <span className="font-mono text-xs text-primary">{skill.proficiency}%</span>
+                  <div key={skill.name} className="flex flex-col gap-1.5">
+                    <div className="flex justify-between items-center">
+                      <span className="font-sans text-[14px] font-medium text-on-surface">{skill.name}</span>
+                      <span className="font-mono text-[11px] text-primary/80">{skill.proficiency}%</span>
                     </div>
                     {/* Linear Progress Bar */}
-                    <div className="w-full h-2 bg-outline-variant/15 rounded-full overflow-hidden">
+                    <div className="w-full h-1.5 bg-outline-variant/10 rounded-full overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
                         whileInView={{ width: `${skill.proficiency}%` }}
@@ -113,20 +120,23 @@ export default function SkillsView() {
                 ))}
               </div>
             </div>
+            </RevealChild>
           ))}
-        </div>
+        </RevealGroup>
 
         {/* Right Side: ESP32 Hardware Assembler game sandbox (5 cols) */}
-        <div className="lg:col-span-5 flex flex-col gap-6">
-          <div className="glass-card rounded-2xl p-6 flex flex-col gap-5 text-left relative overflow-hidden">
-            <div className="flex justify-between items-center border-b border-outline-variant/20 pb-3">
-              <div className="flex items-center gap-2">
-                <Cpu className="h-5 w-5 text-primary" />
-                <span className="font-serif text-[18px] text-on-surface font-semibold">ESP32 Firmware Sandbox</span>
+        <Reveal className="lg:col-span-5 flex flex-col gap-6" delay={0.25}>
+          <div className="glass-card rounded-2xl p-5 md:p-7 flex flex-col gap-5 text-left relative overflow-hidden">
+            <div className="flex justify-between items-center border-b border-outline-variant/15 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="p-1.5 rounded-lg bg-primary/10">
+                  <Cpu className="h-4.5 w-4.5 text-primary" />
+                </div>
+                <span className="font-serif text-[17px] text-on-surface font-semibold">ESP32 Firmware Sandbox</span>
               </div>
               <button
                 onClick={resetGame}
-                className="font-mono text-[10px] text-primary bg-primary/10 px-2 py-1 rounded flex items-center gap-1 hover:bg-primary/25 cursor-pointer transition-colors"
+                className="font-mono text-[10px] text-primary bg-primary/10 px-2.5 py-1 rounded-md flex items-center gap-1 hover:bg-primary/20 cursor-pointer transition-colors"
               >
                 <RefreshCcw className="h-3 w-3" /> Reset
               </button>
@@ -137,19 +147,19 @@ export default function SkillsView() {
             </p>
 
             {/* Grid selectors */}
-            <div className="space-y-3 mt-1">
+            <div className="space-y-4 mt-1">
               {/* Sensors */}
               <div>
-                <span className="font-mono text-[9px] uppercase tracking-wider text-outline-variant block mb-1">Step 1: Input Sensor</span>
+                <span className="font-mono text-[9px] uppercase tracking-wider text-on-surface-variant/60 block mb-1.5">Step 1: Input Sensor</span>
                 <div className="grid grid-cols-3 gap-1.5">
                   {['Webcam & MediaPipe', 'Gyroscope & OpenCV', 'Analog RF Antenna'].map((item) => (
                     <button
                       key={item}
                       onClick={() => handleBlockSelect('sensor', item)}
-                      className={`text-[10px] font-mono p-1 rounded border overflow-hidden text-ellipsis whitespace-nowrap cursor-pointer transition-all ${
+                      className={`text-[10px] font-mono p-1.5 rounded-md border overflow-hidden text-ellipsis whitespace-nowrap cursor-pointer transition-all ${
                         circuit.sensor === item
-                          ? 'bg-primary/15 text-primary border-primary font-bold'
-                          : 'border-outline-variant/20 text-on-surface-variant hover:border-outline-variant/50'
+                          ? 'bg-primary/12 text-primary border-primary/40 font-semibold'
+                          : 'border-outline-variant/15 text-on-surface-variant/70 hover:border-outline-variant/40'
                       }`}
                       title={item}
                     >
@@ -161,16 +171,16 @@ export default function SkillsView() {
 
               {/* MCUs */}
               <div>
-                <span className="font-mono text-[9px] uppercase tracking-wider text-outline-variant block mb-1">Step 2: Processing SoC</span>
+                <span className="font-mono text-[9px] uppercase tracking-wider text-on-surface-variant/60 block mb-1.5">Step 2: Processing SoC</span>
                 <div className="grid grid-cols-2 gap-1.5">
                   {['ESP32-WROOM SoC', 'STM32 Cortex-M7'].map((item) => (
                     <button
                       key={item}
                       onClick={() => handleBlockSelect('controller', item)}
-                      className={`text-[10px] font-mono p-1 rounded border cursor-pointer transition-all ${
+                      className={`text-[10px] font-mono p-1.5 rounded-md border cursor-pointer transition-all ${
                         circuit.controller === item
-                          ? 'bg-primary/15 text-primary border-primary font-bold'
-                          : 'border-outline-variant/20 text-on-surface-variant hover:border-outline-variant/50'
+                          ? 'bg-primary/12 text-primary border-primary/40 font-semibold'
+                          : 'border-outline-variant/15 text-on-surface-variant/70 hover:border-outline-variant/40'
                       }`}
                     >
                       {item.split(' ')[0]}
@@ -181,16 +191,16 @@ export default function SkillsView() {
 
               {/* Power Cells */}
               <div>
-                <span className="font-mono text-[9px] uppercase tracking-wider text-outline-variant block mb-1">Step 3: Power Cells</span>
+                <span className="font-mono text-[9px] uppercase tracking-wider text-on-surface-variant/60 block mb-1.5">Step 3: Power Cells</span>
                 <div className="grid grid-cols-2 gap-1.5">
                   {['Lithium Recycle cell', 'Solar PV Panel Array'].map((item) => (
                     <button
                       key={item}
                       onClick={() => handleBlockSelect('power', item)}
-                      className={`text-[10px] font-mono p-1.5 rounded border cursor-pointer transition-all ${
+                      className={`text-[10px] font-mono p-1.5 rounded-md border cursor-pointer transition-all ${
                         circuit.power === item
-                          ? 'bg-primary/15 text-primary border-primary font-bold'
-                          : 'border-outline-variant/20 text-on-surface-variant hover:border-outline-variant/50'
+                          ? 'bg-primary/12 text-primary border-primary/40 font-semibold'
+                          : 'border-outline-variant/15 text-on-surface-variant/70 hover:border-outline-variant/40'
                       }`}
                     >
                       {item.split(' ')[0]}
@@ -201,16 +211,16 @@ export default function SkillsView() {
 
               {/* Action Outputs */}
               <div>
-                <span className="font-mono text-[9px] uppercase tracking-wider text-outline-variant block mb-1">Step 4: Indicator Feedback</span>
+                <span className="font-mono text-[9px] uppercase tracking-wider text-on-surface-variant/60 block mb-1.5">Step 4: Indicator Feedback</span>
                 <div className="grid grid-cols-2 gap-1.5">
                   {['OLED & Audio Buzz', 'Dashboard Emergency Chime'].map((item) => (
                     <button
                       key={item}
                       onClick={() => handleBlockSelect('indicator', item)}
-                      className={`text-[10px] font-mono p-1 rounded border overflow-hidden text-ellipsis whitespace-nowrap cursor-pointer transition-all ${
+                      className={`text-[10px] font-mono p-1.5 rounded-md border overflow-hidden text-ellipsis whitespace-nowrap cursor-pointer transition-all ${
                         circuit.indicator === item
-                          ? 'bg-primary/15 text-primary border-primary font-bold'
-                          : 'border-outline-variant/20 text-on-surface-variant hover:border-outline-variant/50'
+                          ? 'bg-primary/12 text-primary border-primary/40 font-semibold'
+                          : 'border-outline-variant/15 text-on-surface-variant/70 hover:border-outline-variant/40'
                       }`}
                       title={item}
                     >
@@ -222,7 +232,7 @@ export default function SkillsView() {
             </div>
 
             {/* COMPILER OUTPUT LOG LINES */}
-            <div className="bg-[#0c0e10] rounded-xl p-4 border border-outline-variant/30 font-mono text-[11px] leading-relaxed flex flex-col gap-1 max-h-48 overflow-y-auto">
+            <div className="bg-[#060809] rounded-xl p-4 border border-outline-variant/15 font-mono text-[11px] leading-relaxed flex flex-col gap-1 max-h-48 overflow-y-auto">
               {compulationLog.map((log, idx) => {
                 const isError = log.includes('⚠️');
                 const isSuccess = log.includes('🎉') || log.includes('✔');
@@ -237,7 +247,7 @@ export default function SkillsView() {
               })}
             </div>
           </div>
-        </div>
+        </Reveal>
 
       </div>
     </div>

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { BookOpen, GraduationCap, School, Layers, Compass, Award, ExternalLink } from 'lucide-react';
+import { BookOpen, GraduationCap, School, Layers, Compass, Award } from 'lucide-react';
 import { educationList } from '../data';
+import EducationBlueprintBackground from './EducationBlueprintBackground';
+import { Reveal, RevealGroup, RevealChild } from './Reveal';
 
 export default function EducationView() {
   const [eduIndex, setEduIndex] = useState<number>(0);
@@ -100,47 +102,54 @@ export default function EducationView() {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 md:px-0">
-      <div className="text-center mb-10">
-        <span className="font-mono text-xs uppercase tracking-widest text-[#f8fafc] font-semibold border border-white/15 px-4 py-1.5 rounded-full bg-black/45 backdrop-blur-md shadow-md inline-block">
-          Academic Foundations
-        </span>
-        <h1 className="font-serif text-[42px] md:text-[54px] text-on-surface font-semibold mt-4 tracking-tight">
-          Education Profile
-        </h1>
-        <p className="font-sans text-[15px] md:text-[17px] text-on-surface-variant max-w-xl mx-auto mt-2">
+    <div className="w-full max-w-5xl mx-auto px-4 md:px-0 relative z-0">
+
+      {/* Scroll-Triggered Blueprint Background Animation */}
+      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none md:opacity-40 -mt-10">
+        <EducationBlueprintBackground />
+      </div>
+
+      <Reveal className="text-center mb-10 relative z-10">
+        <p className="font-sans text-[15px] md:text-[16px] text-on-surface-variant/70 max-w-2xl mx-auto">
           Mapping core solid-state hardware dynamics alongside modular computer science.
         </p>
-      </div>
+        <h1 className="mt-4">
+          <span className="section-number text-[32px] md:text-[42px]">01.</span>{' '}
+          <span className="font-serif text-[32px] md:text-[42px] text-on-surface font-semibold tracking-tight">Education</span>
+        </h1>
+        <div className="section-divider mt-4" />
+      </Reveal>
 
       {/* Interactive Institution Tabs */}
-      <div className="flex flex-col sm:flex-row justify-center items-stretch gap-3 mb-10 max-w-3xl mx-auto select-none">
+      <RevealGroup className="flex flex-col sm:flex-row justify-center items-stretch gap-3 mb-10 max-w-3xl mx-auto select-none relative z-10" stagger={0.1} delay={0.1}>
         {educationList.map((item, idx) => (
-          <button
-            key={idx}
-            onClick={() => {
-              setEduIndex(idx);
-              if (item.focus.length > 0) {
-                setSelectedTopic(item.focus[0]);
-              }
-            }}
-            className={`font-sans text-xs uppercase tracking-wider py-4 px-5 rounded-2xl border transition-all duration-300 text-center flex flex-col justify-center gap-1.5 cursor-pointer flex-1 ${
-              eduIndex === idx
-                ? 'bg-[#1e2732] border-primary text-[#f8fafc] font-semibold shadow-lg scale-[1.02]'
-                : 'bg-black/30 border-white/5 text-on-surface-variant hover:text-on-surface hover:bg-black/55'
-            }`}
-          >
-            <span className="font-serif text-[15px] font-bold block leading-none">
-              {idx === 0 ? 'Engineering EEE' : idx === 1 ? 'Senior Secondary (XII)' : 'High School (X)'}
-            </span>
-            <span className="font-mono text-[9px] tracking-widest block opacity-75">{item.period.split(' (')[0]}</span>
-          </button>
+          <RevealChild key={idx} className="flex-1">
+            <button
+              onClick={() => {
+                setEduIndex(idx);
+                if (item.focus.length > 0) {
+                  setSelectedTopic(item.focus[0]);
+                }
+              }}
+              className={`font-sans text-xs uppercase tracking-wider py-4 px-5 rounded-2xl border transition-all duration-300 text-center flex flex-col justify-center gap-1.5 cursor-pointer w-full ${
+                eduIndex === idx
+                  ? 'bg-primary-container border-primary/40 text-on-surface font-semibold shadow-lg'
+                  : 'bg-surface-container/50 border-outline-variant/15 text-on-surface-variant hover:text-on-surface hover:border-outline-variant/40'
+              }`}
+            >
+              <span className="font-serif text-[15px] font-bold block leading-none">
+                {idx === 0 ? 'Engineering EEE' : idx === 1 ? 'Senior Secondary (XII)' : 'High School (X)'}
+              </span>
+              <span className="font-mono text-[9px] tracking-widest block opacity-75">{item.period.split(' (')[0]}</span>
+            </button>
+          </RevealChild>
         ))}
-      </div>
+      </RevealGroup>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+      <RevealGroup className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start relative z-10" stagger={0.15} delay={0.05}>
         {/* Main Institution Card (Col Span 7) */}
-        <div className="md:col-span-7 glass-card rounded-2xl p-6 md:p-8 relative overflow-hidden flex flex-col gap-6">
+        <RevealChild className="md:col-span-7">
+        <div className="glass-card rounded-2xl p-6 md:p-8 relative overflow-hidden flex flex-col gap-6">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full blur-2xl" />
           
           <div className="flex gap-4 items-start">
@@ -169,8 +178,8 @@ export default function EducationView() {
                   onClick={() => setSelectedTopic(topicDetails[item] ? item : null)}
                   className={`font-sans text-xs px-3.5 py-1.5 rounded-full border transition-all duration-300 cursor-pointer ${
                     selectedTopic === item
-                      ? 'bg-[#1e2732] text-[#f8fafc] border-primary font-medium shadow-md'
-                      : 'bg-black/25 border-white/5 text-on-surface-variant hover:text-on-surface hover:border-primary/50'
+                      ? 'bg-primary-container text-primary border-primary/30 font-medium shadow-md'
+                      : 'bg-surface-container/40 border-outline-variant/20 text-on-surface-variant hover:border-primary/40 hover:text-on-surface'
                   }`}
                 >
                   {item}
@@ -193,9 +202,11 @@ export default function EducationView() {
             </ul>
           </div>
         </div>
+        </RevealChild>
 
         {/* Grade Gauge & Course Inspector Drawer (Col Span 5) */}
-        <div className="md:col-span-5 flex flex-col gap-6">
+        <RevealChild className="md:col-span-5">
+        <div className="flex flex-col gap-6">
           {/* CGPA Counter Gauge */}
           <div className="glass-card rounded-2xl p-6 relative overflow-hidden flex items-center justify-between gap-6">
             <div className="flex flex-col gap-1 text-left">
@@ -269,7 +280,7 @@ export default function EducationView() {
                     </p>
                   </div>
 
-                  <div className="border-t border-outline-variant/10 pt-3 bg-primary/5 -mx-6 -mb-6 p-4 rounded-b-2xl mt-auto">
+                  <div className="border-t border-outline-variant/10 pt-3 bg-primary/4 -mx-6 -mb-6 p-4 rounded-b-2xl mt-auto">
                     <span className="font-mono text-[11px] text-primary uppercase tracking-widest block mb-0.5">Key Achievement</span>
                     <p className="font-sans text-[13px] text-on-surface leading-normal">
                       {topicDetails[selectedTopic].achievement}
@@ -285,7 +296,8 @@ export default function EducationView() {
             </AnimatePresence>
           </div>
         </div>
-      </div>
+        </RevealChild>
+      </RevealGroup>
     </div>
   );
 }

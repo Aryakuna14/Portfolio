@@ -1,11 +1,19 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Cpu, Terminal, Radio, ShieldAlert, Award, Activity, Sun, Zap, CheckCircle2, Sliders, Users, ExternalLink } from 'lucide-react';
 import { projects } from '../data';
+import ProjectTelemetryBackground from './ProjectTelemetryBackground';
+import { Reveal, RevealGroup, RevealChild } from './Reveal';
 
 export default function ProjectsView() {
-  const [activeCategory, setActiveCategory] = useState<'technical' | 'non-technical'>('technical');
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>('posture-bot');
+  const detailRef = useRef<HTMLDivElement>(null);
+
+  const scrollToDetail = () => {
+    setTimeout(() => {
+      detailRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  };
 
   // posture bot state variables
   const [neckInclination, setNeckInclination] = useState<number>(15);
@@ -20,14 +28,8 @@ export default function ProjectsView() {
   const [freq, setFreq] = useState<number>(93.5);
   const [isSolarPowered, setIsSolarPowered] = useState<boolean>(true);
 
-  // Filtering projects list
-  const filteredProjects = projects.filter((p) => {
-    if (activeCategory === 'technical') {
-      return p.category === 'technical';
-    } else {
-      return p.category === 'non-technical';
-    }
-  });
+  // Filtering projects list (only technical for this view)
+  const filteredProjects = projects.filter((p) => p.category === 'technical');
 
   const currentProject = projects.find((p) => p.id === selectedProjectId) || (filteredProjects.length > 0 ? filteredProjects[0] : projects[0]);
 
@@ -52,131 +54,68 @@ export default function ProjectsView() {
     
     if (isBadPosture) {
       if (aiModelSelected === 'CNN') {
-        return { level: 'danger', message: `⚠️ BAD POSTURE: CNN Confidence ${Math.min(cnnConfidence, 99.8).toFixed(1)}%`, color: 'text-red-400 bg-red-955/40 border-red-900/50' };
+        return { level: 'danger', message: `⚠️ BAD POSTURE: CNN Confidence ${Math.min(cnnConfidence, 99.8).toFixed(1)}%`, color: 'text-red-400 bg-red-955/40 border-red-900/30' };
       } else {
-        return { level: 'danger', message: `⚠️ BAD POSTURE: SVM Confidence ${Math.min(svmConfidence, 99.8).toFixed(1)}%`, color: 'text-orange-400 bg-orange-955/40 border-orange-900/50' };
+        return { level: 'danger', message: `⚠️ BAD POSTURE: SVM Confidence ${Math.min(svmConfidence, 99.8).toFixed(1)}%`, color: 'text-orange-400 bg-orange-955/40 border-orange-900/30' };
       }
     }
     
     if (aiModelSelected === 'CNN') {
-      return { level: 'safe', message: `🟢 OPTIMAL ALIGNMENT: CNN Conf ${Math.min(cnnConfidence, 99.8).toFixed(1)}%`, color: 'text-green-400 bg-green-955/40 border-green-900/50' };
+      return { level: 'safe', message: `🟢 OPTIMAL ALIGNMENT: CNN Conf ${Math.min(cnnConfidence, 99.8).toFixed(1)}%`, color: 'text-green-400 bg-green-955/40 border-green-900/30' };
     } else {
-      return { level: 'safe', message: `🟢 OPTIMAL ALIGNMENT: SVM Conf ${Math.min(svmConfidence, 99.8).toFixed(1)}%`, color: 'text-emerald-400 bg-emerald-955/40 border-emerald-900/50' };
+      return { level: 'safe', message: `🟢 OPTIMAL ALIGNMENT: SVM Conf ${Math.min(svmConfidence, 99.8).toFixed(1)}%`, color: 'text-emerald-400 bg-emerald-955/40 border-emerald-900/30' };
     }
   };
 
   const getRobomanthanStatus = () => {
     if (isEyesClosed) {
-      return { alert: true, message: '⚡ FIRMWARE INSTALL: Flashing ESP32 payload via OTA Wi-Fi...', color: 'bg-yellow-955/50 border-yellow-900 text-yellow-400' };
+      return { alert: true, message: '⚡ FIRMWARE INSTALL: Flashing ESP32 payload via OTA Wi-Fi...', color: 'bg-yellow-955/50 border-yellow-900/30 text-yellow-400' };
     }
     const driftActive = pulseRate < 55 || pulseRate > 110;
     if (driftActive) {
-      return { alert: true, message: '⚠️ STEERING ALERT: Extreme gyroscopic drift angle detected!', color: 'bg-red-955/50 border-red-900 text-red-400' };
+      return { alert: true, message: '⚠️ STEERING ALERT: Extreme gyroscopic drift angle detected!', color: 'bg-red-955/50 border-red-900/30 text-red-400' };
     }
-    return { alert: false, message: '🟢 RC VEHICLE ONLINE: Wi-Fi telemetry streams active (OpenCV 24 FPS).', color: 'bg-green-955/50 border-green-900 text-green-400' };
+    return { alert: false, message: '🟢 RC VEHICLE ONLINE: Wi-Fi telemetry streams active (OpenCV 24 FPS).', color: 'bg-green-955/50 border-green-900/30 text-green-400' };
   };
 
   const radioSession = getRadioFeedback(freq);
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 md:px-0">
-      <div className="text-center mb-10">
-        <span className="font-mono text-xs uppercase tracking-widest text-[#f8fafc] font-semibold border border-white/15 px-4 py-1.5 rounded-full bg-black/45 backdrop-blur-md shadow-md inline-block">
-          Prototyping Labs
-        </span>
-        <h1 className="font-serif text-[42px] md:text-[54px] text-on-surface font-semibold mt-4 tracking-tight">
-          Engineering Portfolio
-        </h1>
-        <p className="font-sans text-[15px] md:text-[17px] text-on-surface-variant max-w-xl mx-auto mt-2">
+    <div className="w-full max-w-6xl mx-auto px-4 md:px-0 relative z-0">
+      
+      {/* Scroll-Triggered F1 Telemetry Background Animation */}
+      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none md:opacity-40">
+        <ProjectTelemetryBackground />
+      </div>
+
+      {/* Section Header */}
+      <Reveal className="text-center mb-12 relative z-10">
+        <p className="font-sans text-[15px] md:text-[17px] text-on-surface-variant max-w-xl mx-auto mb-5 leading-relaxed">
           From analog energy harvesting circuits to hardware simulators and multi-delegate operations schedules.
         </p>
-      </div>
+        <div className="flex items-center justify-center gap-3">
+          <span className="section-number text-[32px] md:text-[42px]">03.</span>
+          <span className="font-serif text-[32px] md:text-[42px] text-on-surface font-semibold tracking-tight">Projects</span>
+        </div>
+        <div className="section-divider mt-4" />
+      </Reveal>
 
-      {/* Interactive Main Category Clickables */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto mb-10 select-none">
-        {/* Technical Clickable Card */}
-        <button
-          onClick={() => {
-            setActiveCategory('technical');
-            setSelectedProjectId('posture-bot');
-          }}
-          className={`flex items-start gap-4 p-5 rounded-2xl border text-left transition-all duration-300 cursor-pointer relative overflow-hidden group ${
-            activeCategory === 'technical'
-              ? 'bg-[#1e2732] border-primary text-[#f8fafc] shadow-lg scale-[1.01]'
-              : 'bg-black/25 border-white/5 text-on-surface hover:bg-black/45 hover:border-primary/40'
-          }`}
-        >
-          <div className={`p-3 rounded-xl shrink-0 ${
-            activeCategory === 'technical' ? 'bg-primary/20 text-[#f8fafc]' : 'bg-primary/10 text-primary'
-          }`}>
-            <Cpu className="h-6 w-6" />
-          </div>
-          <div>
-            <h2 className="font-serif text-[17px] font-bold leading-normal flex items-center gap-2">
-              Technical Projects
-              <span className={`text-[10px] font-mono border rounded-full px-2.5 py-0.5 leading-none ${
-                activeCategory === 'technical' ? 'border-primary/45 bg-primary/10 text-primary' : 'border-outline-variant/30 text-primary'
-              }`}>
-                {projects.filter(p => p.category === 'technical').length} Built
-              </span>
-            </h2>
-            <p className={`font-sans text-[13px] leading-relaxed mt-1.5 ${
-              activeCategory === 'technical' ? 'text-[#cbd5e1]' : 'text-on-surface-variant'
-            }`}>
-              Explore interactive hardware prototypes, firmware assistants, and AM solar-radio designs.
-            </p>
-          </div>
-        </button>
+      {/* Interactive Main Category Clickables - REMOVED since we split the sections */}
 
-        {/* Non-Technical Clickable Card */}
-        <button
-          onClick={() => {
-            setActiveCategory('non-technical');
-            setSelectedProjectId('no-parking-ops');
-          }}
-          className={`flex items-start gap-4 p-5 rounded-2xl border text-left transition-all duration-300 cursor-pointer relative overflow-hidden group ${
-            activeCategory === 'non-technical'
-              ? 'bg-[#1e2732] border-primary text-[#f8fafc] shadow-lg scale-[1.01]'
-              : 'bg-black/25 border-white/5 text-on-surface hover:bg-black/45 hover:border-primary/40'
-          }`}
-        >
-          <div className={`p-3 rounded-xl shrink-0 ${
-            activeCategory === 'non-technical' ? 'bg-primary/20 text-[#f8fafc]' : 'bg-primary/10 text-primary'
-          }`}>
-            <Users className="h-6 w-6" />
-          </div>
-          <div>
-            <h2 className="font-serif text-[17px] font-bold leading-normal flex items-center gap-2">
-              Non-Technical Projects
-              <span className={`text-[10px] font-mono border rounded-full px-2.5 py-0.5 leading-none ${
-                activeCategory === 'non-technical' ? 'border-primary/45 bg-primary/10 text-primary' : 'border-[#1e2022] text-primary'
-              }`}>
-                {projects.filter(p => p.category === 'non-technical').length} Active
-              </span>
-            </h2>
-            <p className={`font-sans text-[13px] leading-relaxed mt-1.5 ${
-              activeCategory === 'non-technical' ? 'text-[#cbd5e1]' : 'text-on-surface-variant'
-            }`}>
-              Explore large-scale community operations, campus E-Summits, and international conference logistics.
-            </p>
-          </div>
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
         
         {/* Left column - filtered list of project selection cards (5 cols) */}
-        <div className="lg:col-span-5 flex flex-col gap-4">
+        <RevealGroup className="lg:col-span-5 flex flex-col gap-4" stagger={0.1} delay={0.05}>
           {filteredProjects.map((p) => {
             const isSelected = selectedProjectId === p.id;
             const isHardware = p.category === 'hardware';
             return (
               <button
                 key={p.id}
-                onClick={() => setSelectedProjectId(p.id)}
-                className={`text-left p-6 rounded-xl glass-card transition-all duration-300 cursor-pointer relative overflow-hidden flex flex-col gap-3 group border-l-4 ${
+                onClick={() => { setSelectedProjectId(p.id); scrollToDetail(); }}
+                className={`text-left p-6 rounded-xl glass-card transition-all duration-300 cursor-pointer relative overflow-hidden flex flex-col gap-3 group border-l-2 ${
                   isSelected
-                    ? 'border-l-primary bg-primary-container/10'
+                    ? 'border-l-primary bg-primary/5'
                     : 'border-l-transparent'
                 }`}
               >
@@ -200,7 +139,7 @@ export default function ProjectsView() {
                   {p.tech.map((t) => (
                     <span
                       key={t}
-                      className="text-[10px] font-mono border border-outline-variant/20 rounded px-2 py-0.5 text-outline-variant group-hover:text-on-surface group-hover:border-outline-variant/50 transition-colors"
+                      className="text-[9px] font-mono border border-outline-variant/15 rounded-md px-2 py-0.5 text-on-surface-variant/60 group-hover:text-on-surface-variant group-hover:border-outline-variant/30 transition-colors"
                     >
                       {t}
                     </span>
@@ -209,10 +148,11 @@ export default function ProjectsView() {
               </button>
             );
           })}
-        </div>
+        </RevealGroup>
 
         {/* Right column - active project descriptive card & interactive panel (7 cols) */}
-        <div className="lg:col-span-7 flex flex-col gap-6">
+        <Reveal className="lg:col-span-7 flex flex-col gap-6 scroll-mt-20" delay={0.15}>
+        <div ref={detailRef} className="lg:col-span-7 flex flex-col gap-6 scroll-mt-20">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentProject.id}
@@ -220,13 +160,13 @@ export default function ProjectsView() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className="glass-card rounded-2xl p-6 md:p-8 flex flex-col gap-6 text-left relative overflow-hidden"
+              className="glass-card rounded-2xl p-7 md:p-9 flex flex-col gap-6 text-left relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full blur-2xl" />
 
               <div>
-                <span className="font-mono text-xs uppercase tracking-widest text-primary font-medium">
-                  Project Overviews
+                <span className="font-mono text-[10px] uppercase tracking-widest text-on-surface-variant/60 font-medium">
+                  Project Overview
                 </span>
                 <h2 className="font-serif text-[28px] md:text-[34px] font-bold text-on-surface tracking-tight mt-1 leading-tight">
                   {currentProject.title}
@@ -235,7 +175,7 @@ export default function ProjectsView() {
                   {currentProject.tech.map((t) => (
                     <span
                       key={t}
-                      className="text-xs font-mono border border-primary/25 rounded px-2.5 py-1 bg-primary/5 text-primary"
+                      className="text-[11px] font-mono border border-primary/20 rounded-md px-2.5 py-1 bg-primary/5 text-primary/80"
                     >
                       {t}
                     </span>
@@ -243,8 +183,8 @@ export default function ProjectsView() {
                 </div>
               </div>
 
-              <div className="border-t border-outline-variant/20 pt-6">
-                <h3 className="font-serif text-sm uppercase tracking-widest text-on-surface-variant mb-1 font-bold">
+              <div className="border-t border-outline-variant/15 pt-6">
+                <h3 className="font-serif text-sm uppercase tracking-widest text-on-surface-variant/70 mb-1.5 font-semibold">
                   Socio-Technic Objective
                 </h3>
                 <p className="font-sans text-[15px] text-on-surface-variant leading-relaxed mb-4">
@@ -256,7 +196,7 @@ export default function ProjectsView() {
                       href={currentProject.link}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-mono text-[11px] uppercase tracking-wider font-semibold bg-primary hover:bg-primary/95 text-black hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer shadow-md"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-mono text-[11px] uppercase tracking-wider font-semibold bg-primary hover:bg-primary/90 text-[#0a0d10] hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer shadow-md"
                     >
                       <ExternalLink className="h-3.5 w-3.5" />
                       <span>{currentProject.link.includes('github.com') ? 'View GitHub Repository' : 'View LinkedIn Live Post'}</span>
@@ -267,17 +207,20 @@ export default function ProjectsView() {
 
               {/* Interactive simulator panel (Only shown if "simulatable" is true and hardware filter allows) */}
               {currentProject.simulatable && (
-                <div className="border-t border-outline-variant/25 pt-6 flex flex-col gap-4 mt-2">
+                <div className="border-t border-outline-variant/15 pt-6 flex flex-col gap-4 mt-2">
                   <h3 className="font-serif text-[17px] text-primary font-semibold flex items-center gap-2">
-                    <Sliders className="h-4.5 w-4.5" /> Core Simulated Sandbox Lab Tests
+                    <div className="p-1 rounded-lg bg-primary/10">
+                      <Sliders className="h-4 w-4" />
+                    </div>
+                    Core Simulated Sandbox Lab Tests
                   </h3>
 
                   {/* POSTURE BOT SANDBOX */}
                   {currentProject.id === 'posture-bot' && (
-                    <div className="bg-[#0c0e10]/90 border border-outline-variant/30 rounded-xl p-5 flex flex-col gap-4">
-                      <div className="flex items-center justify-between border-b border-outline-variant/20 pb-2">
+                    <div className="bg-[#060809]/90 border border-outline-variant/15 rounded-xl p-5 flex flex-col gap-4">
+                      <div className="flex items-center justify-between border-b border-outline-variant/15 pb-2">
                         <span className="font-mono text-xs uppercase tracking-widest text-primary">MediaPipe Pipeline v2.0</span>
-                        <span className="text-[10px] font-mono text-on-surface-variant">Live Inference</span>
+                        <span className="text-[10px] font-mono text-on-surface-variant/60">Live Inference</span>
                       </div>
 
                       {/* Controls sliders */}
@@ -287,21 +230,21 @@ export default function ProjectsView() {
                             <span className="text-on-surface-variant">Active Model</span>
                             <span className="text-primary font-bold">{aiModelSelected}</span>
                           </div>
-                          <div className="flex rounded-md overflow-hidden border border-outline-variant/30">
+                          <div className="flex rounded-md overflow-hidden border border-outline-variant/15">
                             <button
                               onClick={() => setAiModelSelected('CNN')}
-                              className={`flex-1 py-1 text-[11px] font-mono ${aiModelSelected === 'CNN' ? 'bg-primary/20 text-primary font-bold' : 'bg-black/40 text-on-surface-variant hover:bg-black/60'}`}
+                              className={`flex-1 py-1 text-[11px] font-mono cursor-pointer transition-all ${aiModelSelected === 'CNN' ? 'bg-primary/12 text-primary font-semibold' : 'bg-black/40 text-on-surface-variant hover:bg-black/60'}`}
                             >
                               CNN (Faster)
                             </button>
                             <button
                               onClick={() => setAiModelSelected('SVM')}
-                              className={`flex-1 py-1 text-[11px] font-mono ${aiModelSelected === 'SVM' ? 'bg-primary/20 text-primary font-bold' : 'bg-black/40 text-on-surface-variant hover:bg-black/60'}`}
+                              className={`flex-1 py-1 text-[11px] font-mono cursor-pointer transition-all ${aiModelSelected === 'SVM' ? 'bg-primary/12 text-primary font-semibold' : 'bg-black/40 text-on-surface-variant hover:bg-black/60'}`}
                             >
                               SVM (Baseline)
                             </button>
                           </div>
-                          <span className="text-[10px] text-outline-variant/80 font-mono mt-1">(Compare accuracy difference)</span>
+                          <span className="text-[10px] text-on-surface-variant/40 font-mono mt-1">(Compare accuracy difference)</span>
                         </div>
 
                         <div className="flex flex-col gap-1">
@@ -317,7 +260,7 @@ export default function ProjectsView() {
                             onChange={(e) => setNeckInclination(Number(e.target.value))}
                             className="accent-primary w-full cursor-pointer h-1 rounded flex-1 mt-1.5 mb-1.5"
                           />
-                          <span className="text-[10px] text-outline-variant/80 font-mono">(Warning &gt; 25°)</span>
+                          <span className="text-[10px] text-on-surface-variant/40 font-mono">(Warning &gt; 25°)</span>
                         </div>
                       </div>
 
@@ -330,10 +273,10 @@ export default function ProjectsView() {
 
                   {/* ROBOMANTHAN SANDBOX */}
                   {currentProject.id === 'robomanthan' && (
-                    <div className="bg-[#0c0e10]/90 border border-outline-variant/30 rounded-xl p-5 flex flex-col gap-4">
-                      <div className="flex items-center justify-between border-b border-outline-variant/20 pb-2">
+                    <div className="bg-[#060809]/90 border border-outline-variant/15 rounded-xl p-5 flex flex-col gap-4">
+                      <div className="flex items-center justify-between border-b border-outline-variant/15 pb-2">
                         <span className="font-mono text-xs uppercase tracking-widest text-primary">Robomanthan Controller</span>
-                        <span className="text-[10px] font-mono text-on-surface-variant font-medium">Wi-Fi / ESP32 Telemetry</span>
+                        <span className="text-[10px] font-mono text-on-surface-variant/60 font-medium">Wi-Fi / ESP32 Telemetry</span>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -348,7 +291,7 @@ export default function ProjectsView() {
                             className={`p-3.5 rounded-lg font-mono text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all ${
                               isEyesClosed
                                 ? 'bg-yellow-500 text-black shadow-lg scale-95'
-                                : 'bg-[#1e2022] border border-outline-variant/30 text-on-surface hover:border-yellow-500/50'
+                                : 'bg-[#0a0d10] border border-outline-variant/15 text-on-surface hover:border-yellow-500/30'
                             }`}
                           >
                             {isEyesClosed ? '⚡ Installing Firmware Payload...' : '🔘 Hold to Simulate OTA Flash'}
@@ -369,12 +312,12 @@ export default function ProjectsView() {
                             onChange={(e) => setBpmRate(Number(e.target.value))}
                             className="accent-secondary w-full cursor-pointer h-1 rounded"
                           />
-                          <span className="text-[10px] text-outline-variant/80 font-mono">(Video drop alerts flag at &lt; 8 FPS)</span>
+                          <span className="text-[10px] text-on-surface-variant/40 font-mono">(Video drop alerts flag at &lt; 8 FPS)</span>
                         </div>
                       </div>
 
-                      <div className="flex gap-4 items-center">
-                        <div className="w-1/2 flex flex-col gap-1">
+                      <div className="flex flex-col sm:flex-row gap-4 items-center">
+                        <div className="w-full sm:w-1/2 flex flex-col gap-1">
                           <div className="flex justify-between font-mono text-xs">
                             <span className="text-on-surface-variant">Gyroscopic Drift Yaw</span>
                             <span className="text-primary font-bold">{pulseRate - 80}°</span>
@@ -388,7 +331,7 @@ export default function ProjectsView() {
                             className="accent-primary w-full cursor-pointer h-1 rounded"
                           />
                         </div>
-                        <div className="w-1/2 flex items-center gap-2 justify-center bg-surface-container-low border border-outline-variant/10 rounded-lg py-2">
+                        <div className="w-full sm:w-1/2 flex items-center gap-2 justify-center bg-[#060809] border border-outline-variant/10 rounded-lg py-2">
                           <Activity className={`h-5 w-5 ${pulseRate < 55 || pulseRate > 110 ? 'text-red-400 animate-bounce' : 'text-green-400 animate-pulse'}`} />
                           <span className="font-mono text-sm">{pulseRate - 80}° Yaw</span>
                         </div>
@@ -403,17 +346,17 @@ export default function ProjectsView() {
 
                   {/* SOLAR FM RADIO SANDBOX */}
                   {currentProject.id === 'solar-radio' && (
-                    <div className="bg-[#0c0e10]/90 border border-outline-variant/30 rounded-xl p-5 flex flex-col gap-4">
-                      <div className="flex items-center justify-between border-b border-outline-variant/20 pb-2">
+                    <div className="bg-[#060809]/90 border border-outline-variant/15 rounded-xl p-5 flex flex-col gap-4">
+                      <div className="flex items-center justify-between border-b border-outline-variant/15 pb-2">
                         <span className="font-mono text-xs uppercase tracking-widest text-primary">Solar Analog Receiver v2</span>
                         <div className="flex gap-2 items-center">
-                          <span className="text-[10px] font-mono text-on-surface-variant">Energy Source:</span>
+                          <span className="text-[10px] font-mono text-on-surface-variant/60">Energy Source:</span>
                           <button
                             onClick={() => setIsSolarPowered(!isSolarPowered)}
-                            className={`px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider rounded border cursor-pointer ${
+                            className={`px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider rounded-md border cursor-pointer transition-all ${
                               isSolarPowered
-                                ? 'bg-yellow-950/40 text-yellow-500 border-yellow-700/50'
-                                : 'bg-[#1e2022] text-on-surface border-outline-variant/30'
+                                ? 'bg-yellow-950/40 text-yellow-500 border-yellow-700/30'
+                                : 'bg-[#0a0d10] text-on-surface border-outline-variant/15'
                             }`}
                           >
                             {issolarPowerLabel(isSolarPowered)}
@@ -435,7 +378,7 @@ export default function ProjectsView() {
                           onChange={(e) => setFreq(Number(e.target.value))}
                           className="accent-primary w-full cursor-pointer h-1.5 rounded"
                         />
-                        <div className="flex justify-between text-[9px] font-mono text-outline-variant/70 mt-0.5">
+                        <div className="flex justify-between text-[9px] font-mono text-on-surface-variant/40 mt-0.5">
                           <span>88 MHz</span>
                           <span className={`${Math.abs(freq - 91.1) < 0.8 ? 'text-primary' : ''}`}>91.1</span>
                           <span className={`${Math.abs(freq - 93.5) < 0.8 ? 'text-primary' : ''}`}>93.5</span>
@@ -444,12 +387,12 @@ export default function ProjectsView() {
                         </div>
                       </div>
 
-                      <div className="bg-[#1e2022]/80 border border-outline-variant/35 rounded-lg p-3.5 flex items-center justify-between gap-4">
-                        <div className="flex items-center gap-3">
+                      <div className="bg-[#0a0d10]/80 border border-outline-variant/15 rounded-lg p-3.5 flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-3 min-w-0">
                           <Radio className={`h-6 w-6 text-primary shrink-0 ${radioSession.station.includes('Static') ? 'opacity-40 animate-none' : 'opacity-100 animate-pulse'}`} />
-                          <div>
-                            <span className="font-mono text-xs block text-primary font-semibold">{radioSession.station}</span>
-                            <span className="font-sans text-[12px] text-on-surface-variant leading-relaxed block mt-0.5">
+                          <div className="min-w-0">
+                            <span className="font-mono text-xs block text-primary font-semibold truncate">{radioSession.station}</span>
+                            <span className="font-sans text-[12px] text-on-surface-variant leading-relaxed block mt-0.5 line-clamp-2">
                               {radioSession.track}
                             </span>
                           </div>
@@ -458,7 +401,7 @@ export default function ProjectsView() {
                         {/* Decorative Sun Battery Gauge */}
                         <div className="flex flex-col items-center gap-0.5 shrink-0">
                           <Sun className={`h-5 w-5 ${isSolarPowered ? 'text-yellow-400 animate-spin' : 'text-outline-variant'}`} style={{ animationDuration: '6s' }} />
-                          <span className="font-mono text-[9px] tracking-wide text-on-surface-variant">
+                          <span className="font-mono text-[9px] tracking-wide text-on-surface-variant/60">
                             {isSolarPowered ? '70mA / Sun' : '15mA / Grid'}
                           </span>
                         </div>
@@ -471,6 +414,7 @@ export default function ProjectsView() {
             </motion.div>
           </AnimatePresence>
         </div>
+        </Reveal>
 
       </div>
     </div>
