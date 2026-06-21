@@ -21,14 +21,4 @@ I specialize in bridging embedded firmware with structural semiconductor devices
 - **Programming & Software**: C/C++, Python, Machine Learning (SVM, CNN), OpenCV, MediaPipe, React, TypeScript
 - **Business & Interpersonal**: Digital Marketing, Brand Strategy, Event Logistics, Sponsorship Negotiation, Hosting & Anchoring
 
-## Running the Portfolio Locally
 
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Run the development server:
-   ```bash
-   npm run dev
-   ```
